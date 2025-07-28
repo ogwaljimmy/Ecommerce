@@ -1,6 +1,6 @@
 
 import os
-from dotenv import load_dotenv
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -167,8 +167,8 @@ EMAIL_USE_TLS = 'True'
 
 # Be sure to read the guide in the resources folder of this lecture (SETUP THE EMAIL BACKEND)
 
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = '' # - Enter your GMAIL address # The host email that sends password reset emails
+EMAIL_HOST_PASSWORD = '' # - Enter your app password 
 
 
 
