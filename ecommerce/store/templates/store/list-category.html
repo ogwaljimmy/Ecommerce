@@ -1,51 +1,44 @@
 {% extends "./base.html" %}
-
 {% load static %}
-
 
 {% block content %}
 
-
-<main>
-  
-  <div class="album py-5 bg-light">
-    <div class="container">
-
-      <div class="pb-3 h5"> {{category.name | capfirst }} </div>
-
-
-      <hr>
-
-      <br>
-
-
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
-
-      
-        {% for product in products %}
-
-        <div class="col">
-          <div class="card shadow-sm">
-          <img class="img-fluid" alt="Responsive image" src="{{product.image.url}}">
-
-            <div class="card-body">
-              <p class="card-text">
-                <a class="text-info text-decoration-none" href="{{product.get_absolute_url}}"> {{product.title}} </a>
-              </p>
-              <div class="d-flex justify-content-between align-items-center">
-                <h5> $ {{product.price}} </h5>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {% endfor %}
-
+<main class="py-4">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="h4 mb-0">{{category.name|capfirst}}</h2>
+      <div class="breadcrumb">
+        <a href="{% url 'store' %}" class="text-decoration-none">Home</a> 
+        <span class="mx-2">/</span> 
+        <span>{{category.name|capfirst}}</span>
       </div>
     </div>
+
+    <div class="row g-4">
+      {% for product in products %}
+      <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+        <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+          <a href="{{product.get_absolute_url}}" class="text-decoration-none text-dark">
+            <div class="ratio ratio-1x1">
+              <img class="img-fluid p-3 object-fit-contain" src="{{product.image.url}}" alt="{{product.title}}">
+            </div>
+            <div class="card-body pt-0">
+              <h3 class="h6 card-title mb-1 text-truncate">{{product.title}}</h3>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-primary fw-bold">${{product.price}}</span>
+                {% if product.in_stock %}
+                <span class="badge bg-success">In Stock</span>
+                {% else %}
+                <span class="badge bg-secondary">Out of Stock</span>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
-
-
 </main>
 
 {% endblock %}

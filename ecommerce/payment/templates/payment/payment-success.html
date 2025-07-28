@@ -1,56 +1,40 @@
-
-{% include "store/base.html" %}
-
+{% extends "store/base.html" %}
 {% load static %}
 
 {% block content %}
 
 <style>
-
-
-    body{
-
-
-        background-color: gray;
-
+    .payment-container {
+        background-color: #f8f9fa;
+        min-height: 100vh;
     }
-
-
-
+    .payment-card {
+        border-radius: 12px;
+        border-top: 4px solid #28a745;
+        max-width: 500px;
+        margin: 0 auto;
+    }
 </style>
 
-<body>
-
-    <br>
-
-    <div class="container bg-white shadow-md p-5 form-layout">
-
-        <div class="text-center">
-            
-            <i class="text-success fa fa-credit-card-alt fa-3x" aria-hidden="true"></i>
-
-            <br> <br>
-   
-
-            <h5> <strong> Payment success! </strong> </h5>
-
-            <hr>
-
-            <p> Your order was processed successfully. </p>
-
-
+<div class="payment-container py-5">
+    <div class="container">
+        <div class="payment-card bg-white shadow-lg p-5">
+            <div class="text-center">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                </div>
+                <h3 class="mb-3"><strong>Payment Successful!</strong></h3>
+                <hr class="mx-auto" style="width: 50px; border-top: 2px solid #28a745;">
+                <p class="text-muted mb-4">Your order has been processed successfully.</p>
+                <a href="{% url 'dashboard' %}" class="btn btn-success px-4">
+                    <i class="fas fa-tachometer-alt me-2"></i> View Dashboard
+                </a>
+                <a href="{% url 'store' %}" class="btn btn-outline-secondary px-4 ms-2">
+                    <i class="fas fa-store me-2"></i> Continue Shopping
+                </a>
+            </div>
         </div>
-
-
     </div>
-
-
-</body>
-
+</div>
 
 {% endblock %}
-
-
-
-
-

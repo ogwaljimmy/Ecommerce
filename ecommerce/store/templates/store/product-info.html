@@ -1,148 +1,85 @@
-
 {% extends "./base.html" %}
-
 {% load static %}
 
 {% block content %}
 
-<div class="container">
-
-    <main class="pt-5">
-
-        <div class="row g-3">
-
-            <div class="col-md-5 col-lg-5 order-md-first bg-light">
-            
-                <img class="img-fluid mx-auto d-block" alt="Responsive image" src="{{ product.image.url }}">
-            
-            </div>
-
-            <div class="col-md-7 col-lg-7 ps-md-3 ps-lg-5">
-
-                <h1 class="mb-0 h4"> {{ product.title }}  </h1>
-
-                <strong> {{ product.brand }} </strong>
-
-
-                <hr>
-
-                <br>
-
-
-                <p> {{ product.description }} </p>
-
-                <div class="border">
-
-                    <div class="col border-bottom">
-
-                        <div class="row p-3">
-
-                            <div class="col-6"> Price </div>
-
-                            <div class="col-6 text-end"><span class="h4 fw-bold">$ {{ product.price }} </span></div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col">
-              
-                        <div class="row p-3">
-              
-                            <div class="col-6">
-              
-                               
-                                <label for="select">Qty</label>
-                                
-                                &nbsp; 
-                               
-                                <select id="select">
-              
-                                    <option value="1">1</option>
-              
-                                    <option value="2">2</option>
-              
-                                    <option value="3">3</option>
-              
-                                    <option value="4">4</option>
-              
-                                </select>
-
-                            </div>
-
-                            <div class="col-6 text-end">
-                                
-                                <button type="button" id="add-button" value="{{product.id}}" class="btn btn-secondary btn-sm">
-                        
-                                    <i class="fa fa-plus" aria-hidden="true"></i> &nbsp; Add to cart 
-                            
-                                </button> 
-                            
-
-                            </div>
-                        
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+<div class="container py-5">
+  <main>
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="card border-0 shadow-sm">
+          <div class="ratio ratio-1x1">
+            <img class="img-fluid p-3 object-fit-contain" src="{{ product.image.url }}" alt="{{ product.title }}">
+          </div>
         </div>
+      </div>
 
-    </main>
+      <div class="col-lg-7">
+        <div class="ps-lg-4">
+          <h1 class="h3 mb-2">{{ product.title }}</h1>
+          <div class="d-flex align-items-center mb-3">
+            <span class="badge bg-primary me-2">{{ product.brand }}</span>
+            {% if product.in_stock %}
+            <span class="badge bg-success">In Stock</span>
+            {% else %}
+            <span class="badge bg-secondary">Out of Stock</span>
+            {% endif %}
+          </div>
 
-    <br>
+          <div class="mb-4">
+            <h2 class="h4 text-primary">${{ product.price }}</h2>
+          </div>
 
+          <div class="mb-4">
+            <h3 class="h5">Description</h3>
+            <p class="text-muted">{{ product.description }}</p>
+          </div>
+
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+              <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                  <label for="select" class="form-label">Quantity</label>
+                  <select id="select" class="form-select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <button type="button" id="add-button" value="{{product.id}}" 
+                    class="btn btn-primary w-100 py-2">
+                    <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
 
-
 <script>
-
-    // Add button
-
-    $(document).on('click', '#add-button', function(e){
-
-        e.preventDefault();
-
-        $.ajax({
-
-            type: 'POST',
-            url: '{% url "cart-add" %}',
-            data: {
-
-                product_id: $('#add-button').val(),
-                product_quantity: $('#select option:selected').text(),
-                csrfmiddlewaretoken: "{{csrf_token}}",
-                action: 'post'
-
-            },
-
-            success: function(json){
-
-                //console.log(json)
-
-                document.getElementById("cart-qty").textContent = json.qty
-
-
-            },
-
-            error: function(xhr, errmsg, err){
-
-
-            }
-
-        });
-
-
-    })
-
-
-
-
+  $(document).on('click', '#add-button', function(e){
+    e.preventDefault();
+    $.ajax({
+      type: 'POST',
+      url: '{% url "cart-add" %}',
+      data: {
+        product_id: $('#add-button').val(),
+        product_quantity: $('#select option:selected').text(),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: 'post'
+      },
+      success: function(json){
+        document.getElementById("cart-qty").textContent = json.qty
+      },
+      error: function(xhr, errmsg, err){}
+    });
+  })
 </script>
-
-
 
 {% endblock %}
