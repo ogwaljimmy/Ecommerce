@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator
 from decimal import Decimal
 
 # ----------------------------
-# Category Model (no change)
+# Category Model  
 # ----------------------------
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -29,12 +29,12 @@ class Category(models.Model):
 
 
 # ----------------------------
-# Product Model (with brand as text field)
+# Product Model  
 # ----------------------------
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     name = models.CharField(max_length=150, unique=True)
-    brand = models.CharField(max_length=100, blank=True, help_text="e.g., Apple, Samsung, Nike")
+    brand = models.CharField(max_length=100, blank=True, default="Un-branded", help_text="e.g., Apple, Samsung, Nike")
     slug = models.SlugField(max_length=160, unique=True, blank=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
@@ -47,6 +47,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        verbose_name_plural = "Products"
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['name']),
@@ -63,7 +64,7 @@ class Product(models.Model):
 
 
 # ----------------------------
-# ProductImage Model (unchanged)
+# ProductImage Model  
 # ----------------------------
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
