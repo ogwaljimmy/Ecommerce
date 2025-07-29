@@ -56,15 +56,28 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
   </main>
 </div>
 
+<!-- ✅ Toast Notification -->
+<div id="cart-toast" class="toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-4" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 9999; display: none;">
+  <div class="d-flex">
+    <div class="toast-body">
+      Product added to cart!
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+
+<!-- ✅ JavaScript -->
 <script>
   $(document).on('click', '#add-button', function(e){
     e.preventDefault();
+
     $.ajax({
       type: 'POST',
       url: '{% url "cart-add" %}',
@@ -75,11 +88,20 @@
         action: 'post'
       },
       success: function(json){
-        document.getElementById("cart-qty").textContent = json.qty
+        // Update cart quantity badge
+        document.getElementById("cart-qty").textContent = json.qty;
+
+        // Show toast
+        const toastEl = document.getElementById('cart-toast');
+        toastEl.style.display = 'block';
+        const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        bsToast.show();
       },
-      error: function(xhr, errmsg, err){}
+      error: function(xhr, errmsg, err){
+        alert("Something went wrong. Please try again.");
+      }
     });
-  })
+  });
 </script>
 
 {% endblock %}

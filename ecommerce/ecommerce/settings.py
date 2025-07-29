@@ -35,18 +35,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'store', # Django app
-
     'cart', # Django app
-
     'account', # Django app
-
     'payment', # Django app
-    
     'mathfilters',
-
     'crispy_forms', # Crispy forms
-
     'storages',
+    'pwa',
 
 ]
 
@@ -157,6 +152,33 @@ MEDIA_ROOT = BASE_DIR / 'static/media'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+PWA_APP_NAME = 'Edenthought'
+PWA_APP_SHORT_NAME = 'Edenthought'
+PWA_APP_DESCRIPTION = "Premium Digital Marketplace"
+PWA_APP_THEME_COLOR = '#2c3e50'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/images/favicon.ico',
+        'sizes': '64x64',
+        'type': 'image/x-icon'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/images/favicon.ico',
+        'sizes': '64x64'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'
 
 
 # Email configuration settings:
