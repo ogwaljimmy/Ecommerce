@@ -180,7 +180,7 @@ PWA_APP_ICONS_APPLE = [
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'en-US'
 
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Email configuration settings:
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
