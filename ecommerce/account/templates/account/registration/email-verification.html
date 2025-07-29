@@ -1,13 +1,19 @@
+
+
 {% autoescape off %}
+Hi {{ user.get_full_name|default:user.username }},
 
-Hi,
+Welcome to **Edenthought** — your premium digital marketplace!
 
-Thank you for registering on our website.
+Thank you for signing up. To activate your account and start exploring, please verify your email address by clicking the link below:
 
-Please be so kind as to verify your email by clicking the link below:
+👉 http://{{ domain }}{% url 'email-verification' uidb64=uid token=token %}
 
+If you didn’t create this account, please ignore this email.
 
-http://{{domain}}{% url 'email-verification' uidb64=uid token=token %}
+Warm regards,  
+The Edenthought Team  
+https://{{ domain }}
 
-
+Need help? Reply to this email or contact support.
 {% endautoescape %}
