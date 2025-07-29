@@ -12,7 +12,7 @@ class MobileMoneyProcessor:
     def __init__(self):
         self.secret_key = settings.FLUTTERWAVE_SECRET_KEY
         self.callback_url = f"{settings.BASE_URL}/payment/verify-mobile-money/"
-        self.base_url = "https://api.flutterwave.com/v4"
+        self.base_url = "https://api.flutterwave.com/v3"
     
     def _get_headers(self):
         """Helper method to get authorization headers"""
@@ -26,17 +26,17 @@ class MobileMoneyProcessor:
         Initiate mobile money payment
         Returns: dict with status and response data
         """
-        endpoint = f"{self.base_url}/charges?type=mobile_money"
+        provider = provider.lower()
+        endpoint = f"{self.base_url}/charges?type=mobile_money_{provider}"
+
         
         payload = {
             "tx_ref": f"MM-{order.id}-{int(time.time())}",
             "amount": str(order.amount_paid),
-            "currency": "UGX",  # Adjust currency based on your region
-            "phone_number": phone_number,
+            "currency": "UGX",  # Update accordingly
             "email": order.email,
+            "phone_number": phone_number,
             "fullname": order.full_name,
-            "payment_type": "mobilemoney",
-            "network": provider,
             "redirect_url": self.callback_url,
             "meta": {
                 "order_id": order.id,
@@ -49,16 +49,13 @@ class MobileMoneyProcessor:
                 endpoint,
                 headers=self._get_headers(),
                 json=payload,
-                timeout=30  # 30 seconds timeout
+                timeout=30
             )
             response.raise_for_status()
-            
-            logger.info(f"Payment initiated for order {order.id}")
             return {
                 'status': 'success',
                 'data': response.json()
             }
-            
         except RequestException as e:
             logger.error(f"Payment initiation failed for order {order.id}: {str(e)}")
             return {
