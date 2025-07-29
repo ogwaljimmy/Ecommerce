@@ -46,7 +46,18 @@ class ShippingAddress(models.Model):
 
 
 class Order(models.Model):
-
+    PAYMENT_CHOICES = [
+            ('paypal', 'PayPal'),
+            ('mobile_money', 'Mobile Money'),
+        ]
+        
+    MOBILE_PROVIDERS = [
+            ('mtn', 'MTN'),
+            ('airtel', 'Airtel'),
+            ('vodafone', 'Vodafone'),
+            ('tigo', 'Tigo'),
+            ('other', 'Other'),
+        ]
     full_name = models.CharField(max_length=300)
     email = models.EmailField(max_length=255)
     shipping_address = models.TextField(max_length=10000)
@@ -56,10 +67,17 @@ class Order(models.Model):
     # FK
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
+
+     # Payment-specific fields
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='paypal')
+    mobile_number = models.CharField(max_length=20, blank=True, null=True)
+    mobile_provider = models.CharField(max_length=20, choices=MOBILE_PROVIDERS, blank=True, null=True)
+    payment_reference = models.CharField(max_length=100, blank=True, null=True)
+    payment_verified = models.BooleanField(default=False)
+    
     def __str__(self):
-
-        return 'Order - #' + str(self.id)
-
+        return f'Order #{self.id} - {self.full_name}'
+    
 class OrderItem(models.Model):
     # FK -> 
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)

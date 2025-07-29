@@ -1,5 +1,6 @@
 
 import os
+from dotenv import load_dotenv
 from decouple import config
 from pathlib import Path
 
@@ -171,6 +172,17 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
+# PayPal Configuration
+PAYPAL_CLIENT_ID = os.getenv('PAYPAL_CLIENT_ID')
+PAYPAL_SECRET_KEY = os.getenv('PAYPAL_SECRET_KEY')
+PAYPAL_ENVIRONMENT = os.getenv('PAYPAL_ENVIRONMENT', 'sandbox')  # Default to sandbox
+
+# Payment Gateway Settings
+# Flutterwave Payment Gateway
+FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_PUBLIC_KEY')
+FLUTTERWAVE_SECRET_KEY = config('FLUTTERWAVE_SECRET_KEY')
+FLUTTERWAVE_ENCRYPTION_KEY = config('FLUTTERWAVE_ENCRYPTION_KEY')
+BASE_URL = config('BASE_URL', default='http://localhost:8000')
 
 
 # AWS configuration
