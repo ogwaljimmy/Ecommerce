@@ -1,102 +1,97 @@
-
-{% include "store/base.html" %}
-
+{% extends "store/base.html" %}
 {% load static %}
-
 {% load crispy_forms_tags %}
 
-
 {% block content %}
-
 <style>
-
-
-    body{
-
-
-        background-color: gray;
-
+    body {
+        background-color: #f0f2f5;
     }
 
+    .dashboard-section {
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: transform 0.2s ease;
+    }
 
+    .dashboard-section:hover {
+        transform: translateY(-3px);
+    }
 
+    .dashboard-section h4 {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .dashboard-section p {
+        color: #555;
+        margin-bottom: 1.5rem;
+    }
+
+    .dashboard-section li {
+        color: #555;
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-section i {
+        color: #007bff;
+        margin-right: 0.5rem;
+    }
+
+    .btn-dashboard {
+        border-radius: 6px;
+        padding: 10px 18px;
+        font-weight: 500;
+        transition: 0.3s ease-in-out;
+    }
+
+    .btn-dashboard:hover {
+        background-color: #0056b3;
+    }
 </style>
 
+<div class="container my-5">
 
-<body>
-
-    <br>
-
-    <div class="container bg-white shadow-md p-5 form-layout">
-
-        <h4> <i class="fa fa-hand-paper-o" aria-hidden="true"></i> &nbsp; Welcome, {{user}} </h4>
-
+    <div class="dashboard-section">
+        <h4><i class="fa fa-hand-paper-o"></i>Welcome, {{ user }}</h4>
         <hr>
-
-        <p> This is your dashboard where you can perform any of the following: </p>
-
-        <li> Track your orders </li>
-        <li> Manage your account </li>
-
-
+        <p>This is your dashboard where you can perform any of the following:</p>
+        <ul>
+            <li>Track your orders</li>
+            <li>Manage your account</li>
+        </ul>
     </div>
 
-    <br>
-
-    <div class="container bg-white shadow-md p-5 form-layout">
-
-        <h4> <i class="fa fa-list-alt" aria-hidden="true"></i> &nbsp; Track your orders </h4>
-
+    <div class="dashboard-section">
+        <h4><i class="fa fa-list-alt"></i>Track Your Orders</h4>
         <hr>
-
-        <p> Track all of your orders here... </p>
-
-        <a class="btn btn-primary navbar-btn text-white" type="button"  href="{% url 'track-orders' %}"> My orders </a>
-
+        <p>Monitor all of your purchases and their status here.</p>
+        <a class="btn btn-primary btn-dashboard" href="{% url 'track-orders' %}">
+            <i class="fa fa-eye me-1"></i> My Orders
+        </a>
     </div>
 
-    <br>
-
-
-    <div class="container bg-white shadow-md p-5 form-layout">
-
-        <h4> <i class="fa fa-address-book" aria-hidden="true"></i> &nbsp; Manage your account </h4>
-
+    <div class="dashboard-section">
+        <h4><i class="fa fa-address-book"></i>Manage Your Account</h4>
         <hr>
-
-        <p> Update or delete your account </p>
-
-
-        
-        
-
-        <a class="btn btn-primary navbar-btn text-white" type="button"  href="{% url 'profile-management' %}"> Profile management </a>
-
+        <p>Update or delete your account anytime.</p>
+        <a class="btn btn-primary btn-dashboard" href="{% url 'profile-management' %}">
+            <i class="fa fa-user-cog me-1"></i> Profile Management
+        </a>
     </div>
 
-    <br>
-
-
-    <div class="container bg-white shadow-md p-5 form-layout">
-
-        <h4> <i class="fa fa-chevron-circle-right" aria-hidden="true"></i> &nbsp; Manage shipping </h4>
-
+    <div class="dashboard-section">
+        <h4><i class="fa fa-chevron-circle-right"></i>Manage Shipping</h4>
         <hr>
-
-        <p> Enter in a shipping address </p>
-
-
-        <a class="btn btn-primary navbar-btn text-white" type="button"  href="{% url 'manage-shipping' %}"> Manage shipping </a>
-
+        <p>Add or modify your shipping addresses.</p>
+        <a class="btn btn-primary btn-dashboard" href="{% url 'manage-shipping' %}">
+            <i class="fa fa-truck me-1"></i> Manage Shipping
+        </a>
     </div>
 
-    <br>
-
-
-
-
+</div>
 {% endblock %}
-
-
-
-

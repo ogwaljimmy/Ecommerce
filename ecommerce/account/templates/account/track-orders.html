@@ -1,69 +1,119 @@
 {% extends "store/base.html" %}
-
 {% load static %}
-
 {% load crispy_forms_tags %}
-
 
 {% block content %}
 
-    <style>
+<style>
+    .orders-container {
+        background-color: #f5f5f5;
+        min-height: 100vh;
+    }
+    .orders-header-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border: none;
+    }
+    .orders-list-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border: none;
+    }
+    .order-item {
+        border-bottom: 1px solid #eee;
+        padding: 20px 0;
+        transition: all 0.3s ease;
+    }
+    .order-item:hover {
+        background-color: #f9f9f9;
+    }
+    .order-item:last-child {
+        border-bottom: none;
+    }
+    .order-id {
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    .order-product {
+        font-weight: 500;
+        color: #3498db;
+    }
+    .order-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+    .order-meta-item {
+        background-color: #f0f0f0;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+    .no-orders {
+        text-align: center;
+        padding: 40px;
+        color: #7f8c8d;
+    }
+    .section-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    .section-icon {
+        color: #3498db;
+        margin-right: 8px;
+    }
+</style>
 
+<div class="orders-container py-5">
+    <div class="container">
+        <!-- Header Card -->
+        <div class="orders-header-card bg-white p-4 mb-4">
+            <h3 class="section-title">
+                <i class="fas fa-clipboard-list section-icon"></i>My Orders
+            </h3>
+            <p class="text-muted">View all your recent purchases</p>
+        </div>
 
-        body{
-
-
-            background-color: gray;
-
-        }
-        
-
-
-
-    </style>
-
-    <br>
-
-    <div class="container bg-white shadow-md p-5 form-layout ">
-
-        <h3> <i class="fa fa-list-alt" aria-hidden="true"></i> &nbsp; My orders </h3>
-
-        <p> View all of your orders. </p>
-
-        <hr>
-
-
+        <!-- Orders List Card -->
+        <div class="orders-list-card bg-white p-4">
+            {% if orders %}
+                {% for order in orders %}
+                    <div class="order-item">
+                        <div class="order-id">
+                            <i class="fas fa-receipt"></i> Order #{{order.id}}
+                        </div>
+                        
+                        <div class="order-product mt-2">
+                            {{order.product}}
+                        </div>
+                        
+                        <div class="order-meta">
+                            <span class="order-meta-item">
+                                <i class="fas fa-box-open"></i> Quantity: {{order.quantity}}
+                            </span>
+                            <span class="order-meta-item">
+                                <i class="fas fa-tag"></i> Price: ${{order.price}}
+                            </span>
+                            <span class="order-meta-item">
+                                <i class="far fa-calendar-alt"></i> {{order.date_ordered|date:"M d, Y"}}
+                            </span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-orders">
+                    <i class="fas fa-clipboard-list fa-3x mb-3"></i>
+                    <h4>No Orders Yet</h4>
+                    <p>You haven't placed any orders yet. Start shopping to see them here!</p>
+                    <a href="{% url 'store' %}" class="btn btn-primary mt-2">
+                        <i class="fas fa-shopping-bag"></i> Shop Now
+                    </a>
+                </div>
+            {% endif %}
+        </div>
     </div>
-
-    <br>
-
-    <div class="container bg-white shadow-md p-5 form-layout ">
-
-        {% for order in orders %}
-
-            <strong> <i class="fa fa-list-alt" aria-hidden="true"></i> &nbsp;  Order ID # {{order.id}} </strong>
-            
-            <br> <br>
-
-            {{order.product}}
-
-            <br> <br>
-
-            Quantity x {{order.quantity}}
-
-            <br> <br>
-
-            $ {{order.price}}
-
-            <br> <br>
-
-            <hr>
-
-
-        {% endfor %}
-
-    </div>
-
-    <br>
+</div>
 
 {% endblock %}

@@ -1,100 +1,89 @@
 {% extends "store/base.html" %}
-
 {% load static %}
-
 {% load crispy_forms_tags %}
 
-
 {% block content %}
+<style>
+    body {
+         background: linear-gradient(135deg, #e5eff1, #d0d0d0);
+    }
 
-    <style>
+    .form-layout {
+        border-radius: 12px;
+        max-width: 480px;
+        margin: 0 auto;
+    }
 
+    h3 {
+        font-weight: 600;
+        color: #333;
+    }
 
-        body{
+    .form-control {
+        border-radius: 8px;
+    }
 
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease-in-out;
+    }
 
-            background-color: gray;
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
 
-        }
+    .form-links a {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
 
+    .form-links a:hover {
+        text-decoration: underline;
+    }
 
+    .shadow-md {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+    }
 
-    </style>
+    .container-padding {
+        padding-top: 40px;
+        padding-bottom: 60px;
+    }
+</style>
 
+<div class="container container-padding">
+    <div class="bg-white shadow-md p-5 form-layout">
+        <h3 class="text-center mb-4">Login to your account</h3>
+        <hr class="mb-4">
 
-
-
-    <body>
-
-        <br>
-
-        <div class="container bg-white shadow-md p-5 form-layout">
-
-            <h3> Login to your account </h3>
-
-            <hr>
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+            {{ form.username|as_crispy_field }}
+            {{ form.password|as_crispy_field }}
 
             <br>
 
-            <form method="POST" autocomplete="off">
+            <button type="submit" class="btn btn-primary w-100 p-2">
+                <i class="fa fa-key me-2"></i>Login
+            </button>
 
-                {% csrf_token %}
+            <br><br>
 
-                {{form.username|as_crispy_field}}
+            {{ form.non_field_errors }}
 
-
-                <br> 
-
-
-                {{form.password|as_crispy_field}}
-
-                <br> 
-
-                
-                <button type="submit" class="btn btn-primary navbar-btn text-white w-100 p-2"> <i class="fa fa-key" aria-hidden="true"></i> &nbsp; Login </button>
-
-                <br> <br>
-
-                {{form.non_field_errors}}
-
-                <div class="text-center">
-
-                    <a href="{% url 'register' %}"> Don't have an account? </a>
-
-
-                    <br> <br>
-
-                    <a href="{% url 'reset_password' %}"> Forgotten your password? </a>
-
-
-                </div>
-
-
-            </form>
-
-
-
-
-
-        </div>
-
-
-
-    </body>
-
-    <br> <br>
-
-
+            <div class="text-center form-links">
+                <p>
+                    <a href="{% url 'register' %}">Don't have an account?</a>
+                </p>
+                <p>
+                    <a href="{% url 'reset_password' %}">Forgot your password?</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-

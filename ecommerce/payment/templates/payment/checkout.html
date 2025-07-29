@@ -6,7 +6,6 @@
 <style>
     .checkout-container {
         background-color: #f8f9fa;
-    
     }
     .checkout-card {
         border-radius: 12px;
@@ -16,8 +15,28 @@
         border-color: #4da6ff;
         box-shadow: 0 0 0 0.25rem rgba(77, 166, 255, 0.25);
     }
-    .paypal-btn-container {
+    .payment-btn-container {
         min-height: 55px;
+    }
+    .payment-method {
+        cursor: pointer;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+    }
+    .payment-method:hover {
+        border-color: #4da6ff;
+        background-color: #f8f9fa;
+    }
+    .payment-method.active {
+        border-color: #4da6ff;
+        background-color: #e6f2ff;
+    }
+    .provider-logo {
+        height: 30px;
+        margin-right: 10px;
     }
 </style>
 
@@ -31,7 +50,7 @@
             <p class="text-muted mb-4">Please enter your shipping information below.</p>
             <hr class="my-4">
 
-            <form id="form" onsubmit="event.preventDefault();" class="needs-validation" novalidate>
+            <form id="checkout-form" onsubmit="event.preventDefault();" class="needs-validation" novalidate>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="name" class="form-label">Full Name*</label>
@@ -58,8 +77,8 @@
                     </div>
 
                     <div class="col-12">
-                        <label for="address2" class="form-label">Address Line 2*</label>
-                        <input class="form-control validate" id="address2" type="text" 
+                        <label for="address2" class="form-label">Address Line 2</label>
+                        <input class="form-control" id="address2" type="text" 
                                placeholder="Apartment or suite" autocomplete="address-line2" 
                                value="{{shipping.address2}}">
                     </div>
@@ -89,23 +108,156 @@
 
                 <hr class="my-4">
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="h5 mb-0">Payment Method</h3>
-                    <img src="{% static 'images/payment-methods.png' %}" alt="Payment methods" height="30">
+                <div class="mb-4">
+                    <h3 class="h5 mb-3">Payment Method</h3>
+                    
+                    <!-- Payment Method Selection -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="payment-method active" id="paypal-method">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" 
+                                           id="paypalOption" value="paypal" checked>
+                                    <label class="form-check-label fw-bold" for="paypalOption">
+                                        <i class="fab fa-paypal me-2"></i>PayPal
+                                    </label>
+                                </div>
+                                <p class="small text-muted mt-2 mb-0">Pay securely with PayPal</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="payment-method" id="mobile-money-method">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" 
+                                           id="mobileMoneyOption" value="mobile_money">
+                                    <label class="form-check-label fw-bold" for="mobileMoneyOption">
+                                        <i class="fas fa-mobile-alt me-2"></i>Mobile Money
+                                    </label>
+                                </div>
+                                <p class="small text-muted mt-2 mb-0">Pay with MTN, Airtel, etc.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PayPal Container -->
+                    <div id="paypal-button-container" class="payment-btn-container mb-4"></div>
+                    
+                    <!-- Mobile Money Container -->
+                    <div id="mobile-money-container" class="payment-btn-container" style="display: none;">
+                        <div class="mb-3">
+                            <label for="mobileNumber" class="form-label">Mobile Number*</label>
+                            <input type="tel" class="form-control mobile-money-field" id="mobileNumber" 
+                                   placeholder="e.g. 2567XXXXXXXX" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mobileProvider" class="form-label">Provider*</label>
+                            <select class="form-select mobile-money-field" id="mobileProvider" required>
+                                <option value="">Select provider</option>
+                                <option value="mtn">MTN Mobile Money</option>
+                                <option value="airtel">Airtel Money</option>
+                                <option value="vodafone">Vodafone Cash</option>
+                                <option value="tigo">Tigo Pesa</option>
+                            </select>
+                        </div>
+                        <button type="button" id="mobileMoneyPayBtn" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Pay with Mobile Money
+                        </button>
+                    </div>
                 </div>
-
-                <div id="paypal-button-container" class="paypal-btn-container mb-4"></div>
             </form>
         </div>
     </div>
 </div>
 
-<script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&intent=capture&enable-funding=venmo" 
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=ATzHmCbJnoTjts1t5EbnRcWpCQ92BxeHvy1xFjdQMqmkUfDts7s7KYko8OFPmvK4vGtnn0J2Xj-kxWfg&currency=USD&intent=capture&enable-funding=venmo" 
         data-sdk-integration-source="integrationbuilder"></script>
 
 <script>
     // Total price
     var total_price = '{{cart.get_total}}';
+
+    // Payment method selection
+    document.querySelectorAll('.payment-method').forEach(method => {
+        method.addEventListener('click', function() {
+            // Update active state
+            document.querySelectorAll('.payment-method').forEach(m => {
+                m.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            // Update radio button
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+            
+            // Toggle payment containers
+            const isPayPal = radio.value === 'paypal';
+            document.getElementById('paypal-button-container').style.display = isPayPal ? 'block' : 'none';
+            document.getElementById('mobile-money-container').style.display = isPayPal ? 'none' : 'block';
+        });
+    });
+
+    // Mobile Money Payment Handler
+    $('#mobileMoneyPayBtn').on('click', function() {
+        const mobileNumber = $('#mobileNumber').val().trim();
+        const provider = $('#mobileProvider').val();
+        
+        // Validate inputs
+        if (!mobileNumber) {
+            alert("Please enter your mobile number");
+            return;
+        }
+        if (!provider) {
+            alert("Please select your mobile money provider");
+            return;
+        }
+        
+        // Disable button to prevent multiple clicks
+        const btn = $(this);
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Processing...');
+        
+        // Collect all form data
+        const formData = {
+            name: $('#name').val(),
+            email: $('#email').val(),
+            address1: $('#address1').val(),
+            address2: $('#address2').val(),
+            city: $('#city').val(),
+            state: $('#state').val(),
+            zipcode: $('#zipcode').val(),
+            mobile_number: mobileNumber,
+            mobile_provider: provider,
+            payment_method: 'mobile_money',
+            csrfmiddlewaretoken: "{{csrf_token}}",
+            action: 'post'
+        };
+        
+        // Submit via AJAX
+        $.ajax({
+            type: 'POST',
+            url: '{% url "complete-order" %}',
+            data: formData,
+            success: function(json) {
+                if (json.success) {
+                    if (json.payment_url) {
+                        // Redirect to payment gateway
+                        window.location.href = json.payment_url;
+                    } else {
+                        // Direct success
+                        window.location.replace("{% url 'payment-success' %}");
+                    }
+                } else {
+                    alert("Payment failed: " + (json.message || "Please try again"));
+                    btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-2"></i>Pay with Mobile Money');
+                }
+            },
+            error: function(xhr, errmsg, err) {
+                alert("An error occurred. Please try again.");
+                btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-2"></i>Pay with Mobile Money');
+            }
+        });
+    });
 
     // PayPal Script
     const paypalButtonsComponent = paypal.Buttons({

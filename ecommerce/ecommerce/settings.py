@@ -1,5 +1,6 @@
 
 import os
+from dotenv import load_dotenv
 from decouple import config
 from pathlib import Path
 
@@ -34,18 +35,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'store', # Django app
-
     'cart', # Django app
-
     'account', # Django app
-
     'payment', # Django app
-    
     'mathfilters',
-
     'crispy_forms', # Crispy forms
-
     'storages',
+    'pwa',
 
 ]
 
@@ -158,6 +154,33 @@ MEDIA_ROOT = BASE_DIR / 'static/media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+
+PWA_APP_NAME = 'Edenthought'
+PWA_APP_SHORT_NAME = 'Edenthought'
+PWA_APP_DESCRIPTION = "Premium Digital Marketplace"
+PWA_APP_THEME_COLOR = '#2c3e50'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/images/favicon.ico',
+        'sizes': '64x64',
+        'type': 'image/x-icon'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/images/favicon.ico',
+        'sizes': '64x64'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'
+
+
 # Email configuration settings:
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -171,6 +194,17 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
+# PayPal Configuration
+PAYPAL_CLIENT_ID = os.getenv('PAYPAL_CLIENT_ID')
+PAYPAL_SECRET_KEY = os.getenv('PAYPAL_SECRET_KEY')
+PAYPAL_ENVIRONMENT = os.getenv('PAYPAL_ENVIRONMENT', 'sandbox')  # Default to sandbox
+
+# Payment Gateway Settings
+# Flutterwave Payment Gateway
+FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_PUBLIC_KEY')
+FLUTTERWAVE_SECRET_KEY = config('FLUTTERWAVE_SECRET_KEY')
+FLUTTERWAVE_ENCRYPTION_KEY = config('FLUTTERWAVE_ENCRYPTION_KEY')
+BASE_URL = config('BASE_URL', default='http://localhost:8000')
 
 
 # AWS configuration
