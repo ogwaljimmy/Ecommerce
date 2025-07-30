@@ -81,6 +81,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'store.views.categories', # Updated
                 'cart.context_processors.cart',
+                'store.context_processors.all_categories',
 
             ],
         },
