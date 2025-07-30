@@ -138,20 +138,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 
-# Static files (CSS, JavaScript, images)
 STATIC_URL = '/static/'
-
-# This is where your local static files go (development)
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# This is where collectstatic will gather files for production
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# Media files (user-uploaded)
 MEDIA_URL = '/media/'
 
-# This is where uploaded media will be stored
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'static/media'
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
