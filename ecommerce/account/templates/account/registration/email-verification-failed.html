@@ -1,53 +1,67 @@
-
 {% extends "store/base.html" %}
-
 {% load static %}
 
 {% block content %}
-
 <style>
-
-
-    body{
-
-
-        background-color: gray;
-
+    body {
+        background-color: #f0f2f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    .form-layout {
+        max-width: 450px;
+        margin: auto;
+        border-radius: 12px;
+        margin-top: 50px;
+        border: 1px solid #dee2e6;
+    }
 
+    .error-icon {
+        font-size: 3.5rem;
+        color: #dc3545;
+    }
 
+    .form-layout h5 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-layout p {
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    .btn-support {
+        margin-top: 20px;
+        background-color: #25D366;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-support:hover {
+        background-color: #1ebe5b;
+        text-decoration: none;
+    }
 </style>
 
-<body>
+<div>
+    <div class="container bg-white shadow-md p-5 form-layout text-center">
 
-    <br>
+        <i class="fa fa-times error-icon" aria-hidden="true"></i>
+        <br><br>
 
-    <div class="container bg-white shadow-md p-5 form-layout">
+        <h5><strong>Email verification failed!</strong></h5>
+        <hr>
+        <p>We couldn’t verify your email. Please contact admin support via WhatsApp.</p>
 
-        <div class="text-center">
-            
-            <i class="fa fa-times fa-3x text-danger" aria-hidden="true"></i>
-
-            <br> <br>
-   
-
-            <h5> <strong> Email verification failed! </strong> </h5>
-
-            <hr>
-
-            <p> Please contact admin support. </p>
-
-
-        </div>
-
+        <a href="https://wa.me/256705756582" class="btn-support" target="_blank">Contact Support</a>
 
     </div>
-
-
-</body>
-
-
+</div>
 {% endblock %}
-
-
