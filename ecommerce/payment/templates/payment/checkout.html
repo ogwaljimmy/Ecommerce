@@ -213,58 +213,60 @@
 
     // Flutterwave Inline Payment
     document.getElementById('flutterwave-checkout').addEventListener('click', function () {
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
 
-        if (!name || !email) {
-            alert("Please enter both name and email.");
-            return;
-        }
+    if (!name || !email) {
+        alert("Please enter both name and email.");
+        return;
+    }
 
-        FlutterwaveCheckout({
-            public_key: "{{ FLUTTERWAVE_PUBLIC_KEY }}",
-            tx_ref: "TXREF_" + Date.now(),
-            amount: parseFloat(total_price),
-            currency: "UGX",
-            payment_options: "card, mobilemoneyuganda, ussd",
-            customer: {
+    FlutterwaveCheckout({
+        public_key: "FLWPUBK_TEST-9e1f1941e288deadfecbc106204faea4-X",
+        tx_ref: "TXREF_" + Date.now(),
+        amount: parseFloat("{{ cart.get_total|default:0|floatformat:'2' }}"),
+        currency: "UGX",
+        payment_options: "card, mobilemoneyuganda",
+        customer: {
+            email: email,
+            name: name,
+        },
+        customizations: {
+            title: "Weiboo",
+            description: "Order Payment",
+            logo: "{% static 'images/logo.png' %}"
+        },
+        callback: function (response) {
+            console.log("Payment completed:", response);
+            // Send to backend for order completion
+            $.post("{% url 'complete-order' %}", {
+                name: name,
                 email: email,
-                name: name
-            },
-            customizations: {
-                title: "Weiboo Store",
-                description: "Payment for order",
-                logo: "{% static 'images/logo.png' %}"
-            },
-            callback: function (response) {
-                $.post("{% url 'complete-order' %}", {
-                    name: name,
-                    email: email,
-                    address1: $('#address1').val(),
-                    address2: $('#address2').val(),
-                    city: $('#city').val(),
-                    state: $('#state').val(),
-                    zipcode: $('#zipcode').val(),
-                    payment_method: 'flutterwave',
-                    transaction_id: response.transaction_id,
-                    tx_ref: response.tx_ref,
-                    csrfmiddlewaretoken: "{{ csrf_token }}",
-                    action: 'post'
-                }).done(function (res) {
-                    if (res.success) {
-                        window.location.href = "{% url 'payment-success' %}";
-                    } else {
-                        alert("Payment verification failed: " + (res.message || "Try again."));
-                    }
-                }).fail(function () {
-                    alert("Something went wrong while verifying the payment.");
-                });
-            },
-            onclose: function () {
-                console.log("Flutterwave payment popup closed.");
-            }
-        });
+                address1: $('#address1').val(),
+                address2: $('#address2').val(),
+                city: $('#city').val(),
+                state: $('#state').val(),
+                zipcode: $('#zipcode').val(),
+                payment_method: 'flutterwave',
+                transaction_id: response.transaction_id,
+                tx_ref: response.tx_ref,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post'
+            }).done(function (res) {
+                if (res.success) {
+                    window.location.href = "{% url 'payment-success' %}";
+                } else {
+                    alert("Payment failed: " + (res.message || "Try again."));
+                }
+            }).fail(function () {
+                alert("Something went wrong.");
+            });
+        },
+        onclose: function () {
+            console.log("Flutterwave modal closed");
+        }
     });
+});
 
     // PayPal Buttons
     const paypalButtonsComponent = paypal.Buttons({
