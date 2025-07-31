@@ -8,36 +8,43 @@ from .models import Order
 
 logger = logging.getLogger(__name__)
 
+# payment/payment_processor.py
 class MobileMoneyProcessor:
     def __init__(self):
         self.secret_key = settings.FLUTTERWAVE_SECRET_KEY
+        self.public_key = settings.FLUTTERWAVE_PUBLIC_KEY
         self.callback_url = f"{settings.BASE_URL}/payment/verify-mobile-money/"
         self.base_url = "https://api.flutterwave.com/v3"
     
     def _get_headers(self):
-        """Helper method to get authorization headers"""
         return {
             "Authorization": f"Bearer {self.secret_key}",
             "Content-Type": "application/json"
         }
     
     def initiate_payment(self, order, phone_number, provider):
-        """
-        Initiate mobile money payment
-        Returns: dict with status and response data
-        """
-        provider = provider.lower()
-        endpoint = f"{self.base_url}/charges?type=mobile_money_{provider}"
-
+        endpoint = f"{self.base_url}/payments"
+        
+        # Ensure phone number has country code
+        if not phone_number.startswith('256'):
+            phone_number = f"256{phone_number.lstrip('0')}"
         
         payload = {
-            "tx_ref": f"MM-{order.id}-{int(time.time())}",
+            "tx_ref": f"MM-{order.id}",
             "amount": str(order.amount_paid),
-            "currency": "UGX",  # Update accordingly
-            "email": order.email,
-            "phone_number": phone_number,
-            "fullname": order.full_name,
-            "redirect_url": self.callback_url,
+            "currency": "UGX",
+            "payment_options": f"mobilemoneyuganda,{provider}",
+            "redirect_url": f"{settings.BASE_URL}/payment/verify-mobile-money/",
+            "customer": {
+                "email": order.email,
+                "phonenumber": phone_number,
+                "name": order.full_name
+            },
+            "customizations": {
+                "title": "Your Store Name",
+                "description": f"Payment for Order #{order.id}",
+                "logo": "https://yourstore.com/logo.png"
+            },
             "meta": {
                 "order_id": order.id,
                 "user_id": order.user.id if order.user else None
@@ -54,7 +61,8 @@ class MobileMoneyProcessor:
             response.raise_for_status()
             return {
                 'status': 'success',
-                'data': response.json()
+                'data': response.json(),
+                'payment_url': response.json().get('data', {}).get('link')
             }
         except RequestException as e:
             logger.error(f"Payment initiation failed for order {order.id}: {str(e)}")
